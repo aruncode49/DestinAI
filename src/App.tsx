@@ -1,5 +1,9 @@
-function App() {
-    return <div>Plan Your Trip Now</div>;
-}
+import Hero from "./components/custom/Hero";
 
-export default App;
+export default function App() {
+    return (
+        <div>
+            <Hero />
+        </div>
+    );
+}
