@@ -4,6 +4,7 @@ import "./index.css";
 import App from "./App.tsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Header from "./components/custom/Header";
+import CreateTripPage from "./pages/createTrip.tsx";
 
 const router = createBrowserRouter([
     {
@@ -13,13 +14,13 @@ const router = createBrowserRouter([
     },
     {
         path: "/create-trip/",
-        element: <p>Hello</p>,
+        element: <CreateTripPage />,
     },
 ]);
 
 createRoot(document.getElementById("root")!).render(
     <StrictMode>
-        <div className="lg:max-w-screen-lg mx-auto px-2 lg:px-4">
+        <div className="lg:max-w-screen-lg mx-auto px-3 lg:px-4">
             <Header />
             <RouterProvider router={router} />
         </div>
