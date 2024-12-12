@@ -8,7 +8,7 @@ export default function Header() {
                 className="text-[1.1rem] font-semibold shadow-sm shadow-blue-200 px-2 py-1 rounded-lg"
                 dangerouslySetInnerHTML={{ __html: stringConstants.logo }}
             />
-            <Button>{stringConstants.signin}</Button>
+            <Button variant="primary">{stringConstants.signin}</Button>
         </div>
     );
 }

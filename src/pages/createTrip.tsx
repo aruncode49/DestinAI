@@ -1,11 +1,19 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { budgetOptions } from "@/constants/budgetOptions";
+import { AI_PROMPT } from "@/constants/prompt";
 import { stringConstants } from "@/constants/stringConstants";
 import { travelOptions } from "@/constants/travelOptions";
-import { WandSparkles } from "lucide-react";
-import { useState } from "react";
+import { chatSession } from "@/lib/ai_modal";
+import { WandSparkles, X } from "lucide-react";
+import { lazy, Suspense, useState } from "react";
 import GooglePlacesAutocomplete from "react-google-places-autocomplete";
+import { toast } from "sonner";
+import Spinner from "@/components/custom/Spinner";
+
+const GoogleLoginDialog = lazy(
+    () => import("@/components/custom/GoogleLoginDialog")
+);
 
 interface IPlaceOption {
     label: string;
@@ -16,7 +24,6 @@ interface IPlaceOption {
 }
 
 interface IFormData {
-    location: IPlaceOption | undefined;
     days: number;
     budget: string;
     traveler: string;
@@ -25,8 +32,9 @@ interface IFormData {
 export default function CreateTripPage() {
     // state
     const [place, setPlace] = useState<IPlaceOption | null>(null);
+    const [open, setOpen] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(false);
     const [formData, setFormData] = useState<IFormData>({
-        location: undefined,
         days: 0,
         budget: "",
         traveler: "",
@@ -42,17 +50,53 @@ export default function CreateTripPage() {
         }));
     };
 
-    const onFormSubmit = () => {
+    const onFormSubmit = async () => {
+        // custom validations
+        if (!place) {
+            toast.error("Please select your destination!");
+            return;
+        }
+
         for (const key in formData) {
             if (!formData[key as keyof IFormData]) {
-                console.log("Please fill all the fields!!");
+                toast.error("All fields are required!");
                 return;
             }
         }
+
+        // check access token is present in cookies or not
+        const user = localStorage.getItem("user");
+        if (!user) {
+            setOpen(true);
+            return;
+        }
+
+        // Set loader true if it is false only...
+        if (!loading) {
+            setLoading(true);
+        }
+
+        // final prompt
+        const prompt = AI_PROMPT.replace(
+            "{totalDays}",
+            formData.days.toString()
+        )
+            .replace("{traveler}", formData.traveler)
+            .replace("{location}", place.label)
+            .replace("{budget}", formData.budget);
+
+        // const result = await chatSession.sendMessage(prompt);
+
+        console.log("Data Gets....");
+
+        // console.log(result.response.text());
+
+        setLoading(false);
     };
 
     return (
         <div className="my-8 mb-10">
+            {loading && <Spinner />}
             <h2 className="text-xl md:text-2xl font-semibold text-gray-900">
                 {stringConstants.createTripTitle}
             </h2>
@@ -69,10 +113,7 @@ export default function CreateTripPage() {
                         apiKey={import.meta.env.VITE_GOOGLE_PLACE_API_KEY}
                         selectProps={{
                             value: place,
-                            onChange: (v) => {
-                                setPlace(v);
-                                onInputChange("location", v?.value);
-                            },
+                            onChange: (v) => setPlace(v),
                             placeholder: stringConstants.destinationPlaceholder,
                             styles: {
                                 input: (provided) => ({
@@ -120,7 +161,7 @@ export default function CreateTripPage() {
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
                         {budgetOptions.map((item) => (
                             <div
-                                className={`p-2 pb-3 border rounded-md space-y-2 cursor-pointer hover:shadow-md transition-all duration-100 ${
+                                className={`p-2 pb-3 border rounded-md space-y-2 cursor-pointer shadow-md hover:shadow-xl transition-all duration-100 ${
                                     formData.budget === item.title &&
                                     "border-amber-600 shadow-md"
                                 }`}
@@ -147,7 +188,7 @@ export default function CreateTripPage() {
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
                         {travelOptions.map((item) => (
                             <div
-                                className={`p-2 pb-3 border rounded-md space-y-2 cursor-pointer hover:shadow-md transition-all duration-100 ${
+                                className={`p-2 pb-3 border rounded-md space-y-2 cursor-pointer shadow-md hover:shadow-xl transition-all duration-100 ${
                                     formData.traveler === item.people &&
                                     "border-amber-600 shadow-md"
                                 }`}
@@ -169,11 +210,20 @@ export default function CreateTripPage() {
             {/* Generate Button */}
             <Button
                 onClick={onFormSubmit}
-                className="mt-6 bg-gradient-to-b from-amber-600 to-amber-700 hover:from-amber-600 hover:to-amber-600 w-full sm:w-fit"
+                className="mt-6 bg-gradient-to-b from-amber-600 to-amber-700 hover:from-amber-600 hover:to-amber-600 w-full sm:w-fit text-white"
             >
                 <WandSparkles />
                 {stringConstants.generateTrip}
             </Button>
+
+            {open && (
+                <Suspense fallback={<Spinner />}>
+                    <GoogleLoginDialog
+                        onClose={() => setOpen(false)}
+                        onSuccess={onFormSubmit}
+                    />
+                </Suspense>
+            )}
         </div>
     );
 }

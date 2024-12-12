@@ -15,7 +15,7 @@ export default function Hero() {
             <p className="text-md lg:text-xl  text-center font-medium text-gray-600">
                 {stringConstants.subtitle}
             </p>
-            <Button onClick={() => navigate("/create-trip/")}>
+            <Button variant="primary" onClick={() => navigate("/create-trip/")}>
                 <ExternalLink />
                 {stringConstants.getStarted}
             </Button>

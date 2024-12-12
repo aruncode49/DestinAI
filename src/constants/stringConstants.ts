@@ -21,4 +21,8 @@ export const stringConstants = {
     // budget & travel companion
     budgetHeading: "What is your budget?",
     travelCompanionHeading: "Who will be your travel companion?",
+
+    // auth dialog
+    signInWithGoogle: "Sign in with Google",
+    authDialogDesc: "To continue, please sign in with your Google account.",
 };
