@@ -25,4 +25,7 @@ export const stringConstants = {
     // auth dialog
     signInWithGoogle: "Sign in with Google",
     authDialogDesc: "To continue, please sign in with your Google account.",
+
+    // trip info
+    days: (val: string) => (val === "1" ? "Day" : "Days"),
 };

@@ -4,12 +4,15 @@ import { budgetOptions } from "@/constants/budgetOptions";
 import { AI_PROMPT } from "@/constants/prompt";
 import { stringConstants } from "@/constants/stringConstants";
 import { travelOptions } from "@/constants/travelOptions";
-import { chatSession } from "@/lib/ai_modal";
-import { WandSparkles, X } from "lucide-react";
+import { chatSession } from "@/service/aiModal";
+import { WandSparkles } from "lucide-react";
 import { lazy, Suspense, useState } from "react";
 import GooglePlacesAutocomplete from "react-google-places-autocomplete";
 import { toast } from "sonner";
 import Spinner from "@/components/custom/Spinner";
+import { doc, setDoc } from "firebase/firestore";
+import { db } from "@/service/firebaseConfig";
+import { useNavigate } from "react-router-dom";
 
 const GoogleLoginDialog = lazy(
     () => import("@/components/custom/GoogleLoginDialog")
@@ -30,6 +33,9 @@ interface IFormData {
 }
 
 export default function CreateTripPage() {
+    // hooks
+    const navigate = useNavigate();
+
     // state
     const [place, setPlace] = useState<IPlaceOption | null>(null);
     const [open, setOpen] = useState<boolean>(false);
@@ -77,21 +83,34 @@ export default function CreateTripPage() {
         }
 
         // final prompt
-        const prompt = AI_PROMPT.replace(
-            "{totalDays}",
-            formData.days.toString()
-        )
-            .replace("{traveler}", formData.traveler)
-            .replace("{location}", place.label)
-            .replace("{budget}", formData.budget);
+        try {
+            const prompt = AI_PROMPT.replace(
+                "{totalDays}",
+                formData.days.toString()
+            )
+                .replace("{traveler}", formData.traveler)
+                .replace("{location}", place.label)
+                .replace("{budget}", formData.budget);
 
-        // const result = await chatSession.sendMessage(prompt);
+            const result = await chatSession.sendMessage(prompt);
 
-        console.log("Data Gets....");
-
-        // console.log(result.response.text());
-
-        setLoading(false);
+            // add data inside db
+            const docId = Date.now().toString();
+            const userData = JSON.parse(user);
+            await setDoc(doc(db, "travelPlan", docId), {
+                userSelection: { ...formData, place },
+                generatedTravelData: JSON.parse(result.response.text()),
+                userEmail: userData?.email,
+                id: docId,
+            });
+            toast.success("Travel plan created successfully!");
+            navigate(`/view/${docId}`);
+        } catch (error) {
+            toast.error("Something went wrong!");
+            console.log(error);
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
