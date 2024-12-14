@@ -1,12 +1,34 @@
+import { getGooglePlacePhoto } from "@/api/googlePlace";
 import { stringConstants } from "@/constants/stringConstants";
+import { useEffect, useState } from "react";
 
 export default function TripInfo({ trip }: { trip: any }) {
+    // states
+    const [photoUrl, setPhotoUrl] = useState<string>("");
+
+    // actions
+    const getLocationPhoto = async () => {
+        const photoUrl = await getGooglePlacePhoto({
+            textQuery: trip?.userSelection?.place?.label,
+        });
+        setPhotoUrl(photoUrl ?? "");
+    };
+
+    useEffect(() => {
+        if (trip?.userSelection) {
+            getLocationPhoto();
+        }
+    }, [trip]);
+
     return (
         <div className="mt-8">
             <img
                 className="h-[15rem] md:h-[20rem] w-full object-cover rounded-2xl"
-                src="/placeholder.jpg"
+                src={photoUrl}
                 alt="Trip Image"
+                onError={(e) => {
+                    (e.target as HTMLImageElement).src = "/placeholder.jpg";
+                }}
             />
             <div className="mt-4 space-y-3">
                 <h2 className="text-xl font-semibold text-gray-900">

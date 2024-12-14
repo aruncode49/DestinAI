@@ -4,6 +4,8 @@ import { db } from "@/service/firebaseConfig";
 import { lazy, Suspense, useEffect, useState } from "react";
 import Spinner from "@/components/custom/Spinner";
 import TripInfo from "./components/TripInfo";
+import HotelsList from "./components/HotelsList";
+import PlacesToVisit from "./components/PlacesToVisit";
 const GoogleLoginDialog = lazy(
     () => import("@/components/custom/GoogleLoginDialog")
 );
@@ -26,7 +28,6 @@ export default function ViewTrip() {
 
                 if (docSnap.exists()) {
                     setTripData(docSnap.data());
-                    console.log(docSnap.data());
                 } else {
                     console.log("No such document!");
                 }
@@ -49,13 +50,17 @@ export default function ViewTrip() {
     }, []);
 
     return (
-        <div>
+        <div className="mb-10">
             {loading && <Spinner />}
 
             {/* Trip Information */}
             <TripInfo trip={tripData} />
 
-            {/* Daily Plan */}
+            {/* Hotels List */}
+            <HotelsList trip={tripData} />
+
+            {/* Places to Visit */}
+            <PlacesToVisit trip={tripData} />
 
             {open && (
                 <Suspense fallback={<Spinner />}>
