@@ -20,4 +20,7 @@ export const stringConstants = {
     days: (val: string) => (val === "1" ? "Day" : "Days"),
     hotelRecommendation: "Hotel Recommendation",
     placesToVisit: "Places to Visit",
+    myTrips: "My Trips",
+    logout: "Log out",
+    pleaseLogin: "Please login to view your trip.",
 };
