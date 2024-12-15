@@ -30,4 +30,10 @@ export const stringConstants = {
     budget: (val: string) => val !== "Budget-Friendly" && "Budget",
     footerText: "Built with passion by Arun Kumar.",
     createTrip: "Create Trip",
+    areYouSure: "Are you absolutely sure?",
+    deleteConfirmation:
+        " This action cannot be undone. This will permanently delete your trip and remove your data from our servers.",
+    cancel: "Cancel",
+    delete: "Delete",
+    noTripsAvailable: "No Trip Available!",
 };

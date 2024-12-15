@@ -2,7 +2,14 @@ import { stringConstants } from "@/constants/stringConstants";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
-import { collection, query, where, getDocs } from "firebase/firestore";
+import {
+    collection,
+    query,
+    where,
+    getDocs,
+    deleteDoc,
+    doc,
+} from "firebase/firestore";
 import { db } from "@/service/firebaseConfig";
 import { useEffect, useState } from "react";
 import Spinner from "@/components/custom/Spinner";
@@ -15,6 +22,7 @@ export default function MyTrips() {
 
     // state
     const [tripData, setTripData] = useState<ITripData[] | []>([]);
+    const [loading, setLoading] = useState<boolean>(true);
 
     const fetchMyTrips = async () => {
         const userString = localStorage.getItem("user");
@@ -39,6 +47,21 @@ export default function MyTrips() {
             setTripData(tripData as ITripData[]);
         } catch (error) {
             toast.error(stringConstants.somethingWentWrong);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const onDeleteTrip = async (id: string) => {
+        if (!id) return;
+        try {
+            setLoading(true);
+            await deleteDoc(doc(db, "travelPlan", id));
+            await fetchMyTrips();
+        } catch (error) {
+            toast.error(stringConstants.somethingWentWrong);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -48,21 +71,27 @@ export default function MyTrips() {
 
     return (
         <div className="mt-4">
+            {loading && <Spinner />}
             <h2 className="text-lg font-semibold text-gray-900">
                 {stringConstants.myTrips}
             </h2>
             <p className="text-sm text-gray-500 mt-1">
                 {stringConstants.viewManageTrips}
             </p>
-
             {tripData && tripData.length > 0 ? (
                 <div className="mt-5 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 md:gap-4">
                     {tripData.map((trip) => (
-                        <TripCard key={trip.id} trip={trip} />
+                        <TripCard
+                            onDeleteTrip={onDeleteTrip}
+                            key={trip.id}
+                            trip={trip}
+                        />
                     ))}
                 </div>
             ) : (
-                <Spinner />
+                <p className="text-gray-500 text-center mt-20 text-sm">
+                    {stringConstants.noTripsAvailable}
+                </p>
             )}
         </div>
     );

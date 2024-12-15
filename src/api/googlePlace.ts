@@ -26,9 +26,10 @@ export const getGooglePlacePhoto = async (data: IData) => {
         },
     });
     if (response?.data) {
-        const photoUrl = getPhotoByResourceName(
-            response?.data?.places[0]?.photos[4]?.name
-        );
+        const photoName =
+            response?.data?.places[0]?.photos[4]?.name ??
+            response?.data?.places[0]?.photos[1]?.name;
+        const photoUrl = getPhotoByResourceName(photoName);
         return photoUrl;
     }
 };
