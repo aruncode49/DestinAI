@@ -23,4 +23,11 @@ export const stringConstants = {
     myTrips: "My Trips",
     logout: "Log out",
     pleaseLogin: "Please login to view your trip.",
+    somethingWentWrong: "Something went wrong!",
+    viewManageTrips:
+        "View and manage all your saved trips in one convenient place.",
+    tripDays: (val: string) => `${val} ${val === "1" ? "day" : "days"}`,
+    budget: (val: string) => val !== "Budget-Friendly" && "Budget",
+    footerText: "Built with passion by Arun Kumar.",
+    createTrip: "Create Trip",
 };

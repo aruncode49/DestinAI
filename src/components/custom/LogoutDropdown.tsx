@@ -18,7 +18,7 @@ export default function LogoutDropdown(props: ILogoutDropdown) {
             <DropdownMenuTrigger className="outline-none">
                 {props.children}
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="mt-2">
+            <DropdownMenuContent className="mt-2 mr-2">
                 <DropdownMenuItem
                     onClick={props.onLogout}
                     className="cursor-pointer font-medium"

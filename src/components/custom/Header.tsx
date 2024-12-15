@@ -4,7 +4,7 @@ import LogoutDropdown from "./LogoutDropdown";
 import { lazy, Suspense, useState } from "react";
 import Spinner from "./Spinner";
 import { googleLogout } from "@react-oauth/google";
-import { useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 const GoogleLoginDialog = lazy(
     () => import("@/components/custom/GoogleLoginDialog")
 );
@@ -40,20 +40,33 @@ export default function Header() {
 
     return (
         <div className="flex justify-between py-2 items-center">
-            <h1
-                className="text-[1.1rem] font-semibold"
-                dangerouslySetInnerHTML={{ __html: stringConstants.logo }}
-            />
+            <Link to="/">
+                <h1
+                    className="text-[1.1rem] font-semibold"
+                    dangerouslySetInnerHTML={{ __html: stringConstants.logo }}
+                />
+            </Link>
 
             {user ? (
-                <div className="flex items-center gap-3">
-                    <Button
-                        className="rounded-3xl text-gray-700"
-                        size="sm"
-                        variant="outline"
-                    >
-                        {stringConstants.myTrips}
-                    </Button>
+                <div className="flex items-center gap-2">
+                    <NavLink to="/create-trip">
+                        <Button
+                            className="rounded-3xl text-gray-700"
+                            size="sm"
+                            variant="outline"
+                        >
+                            {stringConstants.createTrip}
+                        </Button>
+                    </NavLink>
+                    <NavLink to="/my-trips">
+                        <Button
+                            className="rounded-3xl text-gray-700"
+                            size="sm"
+                            variant="outline"
+                        >
+                            {stringConstants.myTrips}
+                        </Button>
+                    </NavLink>
                     <LogoutDropdown onLogout={onLogout}>
                         <div className="h-9 w-9 bg-orange-600 text-white flex items-center justify-center rounded-full cursor-pointer hover:bg-orange-500 font-medium">
                             {user.name.charAt(0).toUpperCase() ?? "U"}
