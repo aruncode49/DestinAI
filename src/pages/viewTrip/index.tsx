@@ -7,8 +7,8 @@ import TripInfo from "./components/TripInfo";
 import HotelsList from "./components/HotelsList";
 import PlacesToVisit from "./components/PlacesToVisit";
 import { toast } from "sonner";
-import { stringConstants } from "@/constants/stringConstants";
 import { ITripData } from "@/interfaces/tripData";
+import { stringConstants } from "@/constants/stringConstants";
 const GoogleLoginDialog = lazy(
     () => import("@/components/custom/GoogleLoginDialog")
 );
@@ -19,14 +19,12 @@ export default function ViewTrip() {
     const navigate = useNavigate();
 
     // states
-    const [loading, setLoading] = useState<boolean>(false);
     const [open, setOpen] = useState<boolean>(false);
     const [tripData, setTripData] = useState<ITripData>();
 
     const fetchTripData = async () => {
         try {
             if (tripId) {
-                setLoading(true);
                 const docRef = doc(db, "travelPlan", tripId);
                 const docSnap = await getDoc(docRef);
 
@@ -37,9 +35,7 @@ export default function ViewTrip() {
                 }
             }
         } catch (error) {
-            toast.error("Something went wrong!");
-        } finally {
-            setLoading(false);
+            toast.error(stringConstants.somethingWentWrong);
         }
     };
 
@@ -55,8 +51,6 @@ export default function ViewTrip() {
 
     return (
         <div className="mb-10">
-            {loading && <Spinner />}
-
             {/* Trip Information */}
             <TripInfo trip={tripData!} />
 

@@ -3,17 +3,25 @@ import { stringConstants } from "@/constants/stringConstants";
 import { ITripData } from "@/interfaces/tripData";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { toast } from "sonner";
 
 export default function TripCard({ trip }: { trip: ITripData }) {
     // states
     const [photoUrl, setPhotoUrl] = useState<string>("");
+    const [isLoading, setIsLoading] = useState<boolean>(true);
 
     // actions
     const getLocationPhoto = async () => {
-        const photoUrl = await getGooglePlacePhoto({
-            textQuery: trip.userSelection.place.label,
-        });
-        setPhotoUrl(photoUrl ?? "");
+        try {
+            const photoUrl = await getGooglePlacePhoto({
+                textQuery: trip.userSelection.place.label,
+            });
+            setPhotoUrl(photoUrl ?? "");
+        } catch (error) {
+            toast.error(stringConstants.somethingWentWrong);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     // effect
@@ -28,14 +36,18 @@ export default function TripCard({ trip }: { trip: ITripData }) {
             to={`/view/${trip.id}`}
             className="p-2 border shadow rounded-lg cursor-pointer hover:shadow-md"
         >
-            <img
-                className="h-[8rem] md:h-[9rem] w-full object-cover rounded-lg"
-                src={photoUrl}
-                alt="hotel image"
-                onError={(e) => {
-                    (e.target as HTMLImageElement).src = "/placeholder.jpg";
-                }}
-            />
+            {isLoading ? (
+                <div className="h-[8rem] md:h-[9rem] w-full rounded-lg bg-gray-200 animate-pulse" />
+            ) : (
+                <img
+                    className="h-[8rem] md:h-[9rem] w-full object-cover rounded-lg"
+                    src={photoUrl}
+                    alt="hotel image"
+                    onError={(e) => {
+                        (e.target as HTMLImageElement).src = "/placeholder.jpg";
+                    }}
+                />
+            )}
             <h2 className="text-sm font-medium text-gray-800 mt-2 line-clamp-1">
                 {trip.userSelection.place.label}
             </h2>
