@@ -40,7 +40,7 @@ export default function Header() {
 
     return (
         <div className="flex justify-between py-2 items-center">
-            <Link to="/">
+            <Link to="/" className="active:scale-95">
                 <h1
                     className="text-[1.1rem] font-semibold"
                     dangerouslySetInnerHTML={{ __html: stringConstants.logo }}

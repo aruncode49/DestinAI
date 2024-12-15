@@ -19,6 +19,8 @@ export default function Hero() {
                 <ExternalLink />
                 {stringConstants.getStarted}
             </Button>
+
+            <img src="/platform.png" alt="Website" />
         </div>
     );
 }

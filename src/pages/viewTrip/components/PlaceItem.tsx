@@ -1,20 +1,10 @@
 import { getGooglePlacePhoto } from "@/api/googlePlace";
+import { Place2 } from "@/interfaces/tripData";
 import { ratingStars } from "@/lib/starsRating";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-interface IPlace {
-    placeName: string;
-    placeDetails: string;
-    placeImageUrl: string;
-    geoCoordinates: [number, number];
-    ticketPricing: string;
-    rating: number;
-    bestTimeToVisit: string;
-    timeToTravel: number;
-}
-
-export default function PlaceItem({ place }: { place: IPlace }) {
+export default function PlaceItem({ place }: { place: Place2 }) {
     // states
     const [photoUrl, setPhotoUrl] = useState<string>("");
 
@@ -42,7 +32,7 @@ export default function PlaceItem({ place }: { place: IPlace }) {
             <Link
                 to={`https://www.google.com/maps/search/?api=1&query=${place?.placeName}`}
                 target="_blank"
-                className="mt-2 border rounded-md p-2 flex gap-3 cursor-pointer md:hover:scale-105 transition-all duration-200 hover:shadow-md"
+                className="mt-2 border rounded-md p-2 flex gap-3 cursor-pointer transition-all duration-200 shadow hover:shadow-md"
             >
                 <img
                     className="max-h-[120px] w-full max-w-[150px] object-cover rounded-md"
@@ -54,10 +44,10 @@ export default function PlaceItem({ place }: { place: IPlace }) {
                 />
 
                 <div className="space-y-1">
-                    <h1 className="font-semibold text-sm md:text-base">
+                    <h1 className="font-semibold text-sm md:text-base line-clamp-1">
                         {place.placeName}
                     </h1>
-                    <p className="text-xs md:text-sm font-medium text-gray-500">
+                    <p className="text-xs md:text-sm font-medium text-gray-500 line-clamp-2">
                         {place.placeDetails}
                     </p>
 

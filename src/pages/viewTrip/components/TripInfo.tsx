@@ -1,8 +1,9 @@
 import { getGooglePlacePhoto } from "@/api/googlePlace";
 import { stringConstants } from "@/constants/stringConstants";
+import { ITripData } from "@/interfaces/tripData";
 import { useEffect, useState } from "react";
 
-export default function TripInfo({ trip }: { trip: any }) {
+export default function TripInfo({ trip }: { trip: ITripData }) {
     // states
     const [photoUrl, setPhotoUrl] = useState<string>("");
 

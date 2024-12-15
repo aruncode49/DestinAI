@@ -1,19 +1,10 @@
 import { getGooglePlacePhoto } from "@/api/googlePlace";
+import { Hotel } from "@/interfaces/tripData";
 import { ratingStars } from "@/lib/starsRating";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-interface IHotel {
-    description: string;
-    geoCoordinates: number[];
-    price: string;
-    hotelName: string;
-    hotelImageUrl: string;
-    hotelAddress: string;
-    rating: number;
-}
-
-export default function HotelCard({ hotel }: { hotel: IHotel }) {
+export default function HotelCard({ hotel }: { hotel: Hotel }) {
     // states
     const [photoUrl, setPhotoUrl] = useState<string>("");
 

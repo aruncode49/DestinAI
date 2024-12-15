@@ -8,6 +8,7 @@ import HotelsList from "./components/HotelsList";
 import PlacesToVisit from "./components/PlacesToVisit";
 import { toast } from "sonner";
 import { stringConstants } from "@/constants/stringConstants";
+import { ITripData } from "@/interfaces/tripData";
 const GoogleLoginDialog = lazy(
     () => import("@/components/custom/GoogleLoginDialog")
 );
@@ -20,7 +21,7 @@ export default function ViewTrip() {
     // states
     const [loading, setLoading] = useState<boolean>(false);
     const [open, setOpen] = useState<boolean>(false);
-    const [tripData, setTripData] = useState({});
+    const [tripData, setTripData] = useState<ITripData>();
 
     const fetchTripData = async () => {
         try {
@@ -30,13 +31,13 @@ export default function ViewTrip() {
                 const docSnap = await getDoc(docRef);
 
                 if (docSnap.exists()) {
-                    setTripData(docSnap.data());
+                    setTripData(docSnap.data() as ITripData);
                 } else {
-                    console.log("No such document!");
+                    toast.error("Trip not found!");
                 }
             }
         } catch (error) {
-            console.log(error);
+            toast.error("Something went wrong!");
         } finally {
             setLoading(false);
         }
@@ -46,7 +47,6 @@ export default function ViewTrip() {
     useEffect(() => {
         const user = localStorage.getItem("user");
         if (!user) {
-            toast.error(stringConstants.pleaseLogin);
             navigate("/");
         } else {
             fetchTripData();
@@ -58,13 +58,13 @@ export default function ViewTrip() {
             {loading && <Spinner />}
 
             {/* Trip Information */}
-            <TripInfo trip={tripData} />
+            <TripInfo trip={tripData!} />
 
             {/* Hotels List */}
-            <HotelsList trip={tripData} />
+            <HotelsList trip={tripData!} />
 
             {/* Places to Visit */}
-            <PlacesToVisit trip={tripData} />
+            <PlacesToVisit trip={tripData!} />
 
             {open && (
                 <Suspense fallback={<Spinner />}>

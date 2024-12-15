@@ -107,7 +107,6 @@ export default function CreateTripPage() {
             navigate(`/view/${docId}`);
         } catch (error) {
             toast.error("Something went wrong!");
-            console.log(error);
         } finally {
             setLoading(false);
         }
