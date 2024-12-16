@@ -31,7 +31,7 @@ export default function ViewTrip() {
                 if (docSnap.exists()) {
                     setTripData(docSnap.data() as ITripData);
                 } else {
-                    toast.error("Trip not found!");
+                    toast.error(stringConstants.tripNotFound);
                 }
             }
         } catch (error) {

@@ -36,4 +36,9 @@ export const stringConstants = {
     cancel: "Cancel",
     delete: "Delete",
     noTripsAvailable: "No Trip Available!",
+    plsSelectDestination: "Please select your destination!",
+    allFieldsRequired: "All fields are required!",
+    pleaseEnterNoOfDays: "Please enter a number of days between 1 and 10",
+    travelPlanCreatedSuccesfully: "Travel plan created successfully!",
+    tripNotFound: "Trip not found!",
 };

@@ -25,11 +25,15 @@ export const getGooglePlacePhoto = async (data: IData) => {
             ],
         },
     });
-    if (response?.data) {
-        const photoName =
-            response?.data?.places[0]?.photos[4]?.name ??
-            response?.data?.places[0]?.photos[1]?.name;
-        const photoUrl = getPhotoByResourceName(photoName);
-        return photoUrl;
+    if (response?.data?.places?.[0]?.photos) {
+        const photos = response.data.places[0].photos;
+
+        // Attempt to get photoName from photos[4], fallback to photos[1], or default to null
+        const photoName = photos?.[4]?.name || photos?.[1]?.name || null;
+
+        if (photoName) {
+            // If a valid photoName is found, retrieve the photo URL
+            return getPhotoByResourceName(photoName);
+        }
     }
 };

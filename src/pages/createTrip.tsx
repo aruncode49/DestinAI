@@ -59,15 +59,20 @@ export default function CreateTripPage() {
     const onFormSubmit = async () => {
         // custom validations
         if (!place) {
-            toast.error("Please select your destination!");
+            toast.error(stringConstants.plsSelectDestination);
             return;
         }
 
         for (const key in formData) {
             if (!formData[key as keyof IFormData]) {
-                toast.error("All fields are required!");
+                toast.error(stringConstants.allFieldsRequired);
                 return;
             }
+        }
+
+        // check days limit
+        if (formData.days < 1 || formData.days > 10) {
+            return toast.error(stringConstants.pleaseEnterNoOfDays);
         }
 
         // check access token is present in cookies or not
@@ -103,10 +108,10 @@ export default function CreateTripPage() {
                 userEmail: userData?.email,
                 id: docId,
             });
-            toast.success("Travel plan created successfully!");
+            toast.success(stringConstants.travelPlanCreatedSuccesfully);
             navigate(`/view/${docId}`);
         } catch (error) {
-            toast.error("Something went wrong!");
+            toast.error(stringConstants.somethingWentWrong);
         } finally {
             setLoading(false);
         }
